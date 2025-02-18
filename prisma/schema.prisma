@@ -12,3 +12,77 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model user {
+  id         String   @id @default(uuid())
+  name       String
+  email      String   @unique
+  password   String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  tasks      tasks[]
+}
+
+model tasks {
+  id              String            @id @default(uuid())
+  user_id         String
+  user            user              @relation(fields: [user_id], references: [id])
+  project_id      String?
+  project         projects?         @relation(fields: [project_id], references: [id])
+  name            String
+  description     String?
+  due_date        DateTime?
+  priority        Priority
+  status          Status
+  created_at      DateTime          @default(now())
+  updated_at      DateTime          @updatedAt
+  task_categories task_categories[]
+  task_comments   task_comments[]
+}
+
+model task_categories {
+  id          String     @id @default(uuid())
+  taskId      String
+  task        tasks      @relation(fields: [taskId], references: [id])
+  category_id String
+  category    categories @relation(fields: [category_id], references: [id])
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
+}
+
+model task_comments {
+  id         String   @id @default(uuid())
+  task_id    String
+  task       tasks    @relation(fields: [task_id], references: [id])
+  comment    String
+  created_at DateTime @default(now())
+}
+
+model categories {
+  id              String            @id @default(uuid())
+  name            String
+  created_at      DateTime          @default(now())
+  updated_at      DateTime          @updatedAt
+  task_categories task_categories[]
+}
+
+model projects {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  tasks       tasks[]
+}
+
+enum Priority {
+  Low
+  Medium
+  High
+}
+
+enum Status {
+  Pending
+  InProgress
+  Completed
+}

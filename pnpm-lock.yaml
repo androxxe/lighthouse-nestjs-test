@@ -17,6 +17,9 @@ importers:
       '@nestjs/platform-express':
         specifier: ^9.0.0
         version: 9.4.3(@nestjs/common@9.4.3(reflect-metadata@0.1.14)(rxjs@7.8.1))(@nestjs/core@9.4.3)
+      '@prisma/client':
+        specifier: 6.3.1
+        version: 6.3.1(prisma@6.3.1(typescript@4.9.5))(typescript@4.9.5)
       reflect-metadata:
         specifier: ^0.1.13
         version: 0.1.14
@@ -720,6 +723,18 @@ packages:
     resolution: {integrity: sha512-um0xL3fO7Mf4fDxcqx9KryrB7zgRM5JSlvGN5AGkP6JLM5XEKyjeAiPbNxdXVXQ16isuAhYpvP88NgL2BGd6aA==}
     engines: {node: '>=8.0.0', npm: '>=5.0.0'}
     hasBin: true
+
+  '@prisma/client@6.3.1':
+    resolution: {integrity: sha512-ARAJaPs+eBkemdky/XU3cvGRl+mIPHCN2lCXsl5Vlb0E2gV+R6IN7aCI8CisRGszEZondwIsW9Iz8EJkTdykyA==}
+    engines: {node: '>=18.18'}
+    peerDependencies:
+      prisma: '*'
+      typescript: '>=5.1.0'
+    peerDependenciesMeta:
+      prisma:
+        optional: true
+      typescript:
+        optional: true
 
   '@prisma/debug@6.3.1':
     resolution: {integrity: sha512-RrEBkd+HLZx+ydfmYT0jUj7wjLiS95wfTOSQ+8FQbvb6vHh5AeKfEPt/XUQ5+Buljj8hltEfOslEW57/wQIVeA==}
@@ -3890,6 +3905,11 @@ snapshots:
       node-fetch: 2.7.0
     transitivePeerDependencies:
       - encoding
+
+  '@prisma/client@6.3.1(prisma@6.3.1(typescript@4.9.5))(typescript@4.9.5)':
+    optionalDependencies:
+      prisma: 6.3.1(typescript@4.9.5)
+      typescript: 4.9.5
 
   '@prisma/debug@6.3.1': {}
 
