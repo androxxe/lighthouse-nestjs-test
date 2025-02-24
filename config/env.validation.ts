@@ -1,7 +1,14 @@
 import { plainToInstance } from 'class-transformer';
-import { IsNumber, IsString, validateSync } from 'class-validator';
+import { IsEnum, IsNumber, IsString, validateSync } from 'class-validator';
 
 class EnvironmentVariables {
+  @IsNumber()
+  APP_PORT: number;
+
+  @IsString()
+  @IsEnum(['development', 'staging', 'production'])
+  APP_ENV: string;
+
   @IsString()
   DB_HOST: string;
 
@@ -28,6 +35,9 @@ class EnvironmentVariables {
 
   @IsString()
   DATABASE_URL: string;
+
+  @IsString()
+  JWT_SECRET_KEY: string;
 }
 
 export function validate(config: Record<string, unknown>) {

@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { TransformationInterceptor } from './transform.interceptor';
 import { useContainer } from 'class-validator';
+import configuration from 'config/configuration';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -15,6 +16,6 @@ async function bootstrap() {
 
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
-  await app.listen(3000);
+  await app.listen(configuration().port);
 }
 bootstrap();
