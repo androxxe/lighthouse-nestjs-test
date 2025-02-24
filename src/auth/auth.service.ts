@@ -22,6 +22,11 @@ export class AuthService implements AuthServiceInterface {
         email: data.email,
         password: await this.cryptoService.hash(data.password),
       },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+      },
     });
   }
 

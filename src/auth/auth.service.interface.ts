@@ -9,7 +9,7 @@ export interface JWTPayloadInterface {
 }
 
 export interface AuthServiceInterface {
-  register: (data: RegisterDTO) => Promise<user>;
+  register: (data: RegisterDTO) => Promise<Pick<user, 'id' | 'email' | 'name'>>;
   login: (data: LoginDTO) => Promise<{
     user: Pick<user, 'id' | 'email' | 'name'>;
     access_token: string;
