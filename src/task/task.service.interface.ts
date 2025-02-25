@@ -2,26 +2,22 @@ import { RequestUserInterface } from 'src/user/user.interface';
 import { CreateTaskCategoryDTO } from './dto/create-task-category.dto';
 import { CreateTaskDTO } from './dto/create-task.dto';
 import { UpdateTaskDTO } from './dto/update-task.dto';
-import { categories, projects, tasks } from '@prisma/client';
-
-export interface TaskCreateResponseInterface extends Omit<tasks, 'user_id' | 'project_id'> {
-  user: {
-    id: string;
-    name: string;
-    email: string;
-  };
-  project: Pick<projects, 'id' | 'name'> | null;
-  task_categories: Array<{
-    id: string;
-    name: string;
-  }>;
-}
+import { categories, task_comments } from '@prisma/client';
+import { TaskCreateResponseInterface, TaskDetailResponseInterface, TaskListResponseInterface } from './task.interface';
+import { ListTaskDTO } from './dto/list-task.dto';
+import { DatatableInterface } from 'src/datatable/datatable.interface';
+import { CreateTaskCommentDTO } from './dto/create-task-comment.dto';
 
 export interface TaskServiceInterface {
   create(user: RequestUserInterface['user'], data: CreateTaskDTO): Promise<TaskCreateResponseInterface>;
-  findAll(): string;
-  findOne(id: number): string;
-  update(id: number, updateTaskDTO: UpdateTaskDTO): string;
-  remove(id: number): string;
+  createComment(
+    user: RequestUserInterface['user'],
+    task_id: string,
+    data: CreateTaskCommentDTO
+  ): Promise<task_comments>;
+  findAll(query: ListTaskDTO): Promise<DatatableInterface<TaskListResponseInterface>>;
+  findOne(id: string): Promise<TaskDetailResponseInterface>;
+  update(id: string, updateTaskDTO: UpdateTaskDTO): string;
+  remove(id: string): string;
   createCategory(data: CreateTaskCategoryDTO): Promise<categories>;
 }

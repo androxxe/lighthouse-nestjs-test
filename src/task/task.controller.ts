@@ -1,10 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, Query } from '@nestjs/common';
 import { TaskService } from './task.service';
 import { CreateTaskDTO } from './dto/create-task.dto';
 import { UpdateTaskDTO } from './dto/update-task.dto';
 import { CreateTaskCategoryDTO } from './dto/create-task-category.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { RequestUserInterface } from 'src/user/user.interface';
+import { ListTaskDTO } from './dto/list-task.dto';
+import { CreateTaskCommentDTO } from './dto/create-task-comment.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('v1/task')
@@ -12,28 +14,41 @@ export class TaskController {
   constructor(private readonly taskService: TaskService) {}
 
   @Post()
-  create(@Request() req: RequestUserInterface, @Body() createTaskDTO: CreateTaskDTO) {
-    return this.taskService.create(req.user, createTaskDTO);
+  create(@Request() req: RequestUserInterface, @Body() data: CreateTaskDTO) {
+    return this.taskService.create(req.user, data);
+  }
+
+  @Post(':task_id/comment')
+  async createComment(
+    @Param('task_id') task_id: string,
+    @Request() req: RequestUserInterface,
+    @Body() data: CreateTaskCommentDTO
+  ) {
+    await this.taskService.createComment(req.user, task_id, data);
+
+    return {
+      message: 'Comment created successfully',
+    };
   }
 
   @Get()
-  findAll() {
-    return this.taskService.findAll();
+  findAll(@Query() query: ListTaskDTO) {
+    return this.taskService.findAll(query);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.taskService.findOne(+id);
+  @Get(':task_id')
+  findOne(@Param('task_id') task_id: string) {
+    return this.taskService.findOne(task_id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTaskDTO: UpdateTaskDTO) {
-    return this.taskService.update(+id, updateTaskDTO);
+  @Patch(':task_id')
+  update(@Param('task_id') task_id: string, @Body() updateTaskDTO: UpdateTaskDTO) {
+    return this.taskService.update(task_id, updateTaskDTO);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.taskService.remove(+id);
+  @Delete(':task_id')
+  remove(@Param('task_id') task_id: string) {
+    return this.taskService.remove(task_id);
   }
 
   @Post('category')

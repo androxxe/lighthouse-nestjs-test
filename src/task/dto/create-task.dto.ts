@@ -1,6 +1,6 @@
 import { Priority } from '@prisma/client';
 import { IsArray, IsDateString, IsEnum, IsOptional, IsString } from 'class-validator';
-import { IsForeignKeyExists } from '../../is-foreign-key-exist.validator';
+import { IsForeignKeyExists } from '../../validator/is-foreign-key-exist.validator';
 
 export class CreateTaskDTO {
   @IsString()
