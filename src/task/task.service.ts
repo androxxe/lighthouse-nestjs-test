@@ -8,6 +8,7 @@ import { RequestUserInterface } from 'src/user/user.interface';
 import { TaskServiceInterface } from './task.service.interface';
 import { ListTaskDTO } from './dto/list-task.dto';
 import { CreateTaskCommentDTO } from './dto/create-task-comment.dto';
+import { ListCommentDTO } from './dto/list-comment.dto';
 
 @Injectable()
 export class TaskService implements TaskServiceInterface {
@@ -115,6 +116,60 @@ export class TaskService implements TaskServiceInterface {
         },
       },
     });
+  }
+
+  async getComment(task_id: string, query: ListCommentDTO) {
+    const [data, total] = await Promise.all([
+      this.prismaService.task_comments.findMany({
+        where: {
+          task: {
+            id: task_id,
+          },
+        },
+        skip: (query.page - 1) * query.per_page,
+        take: query.per_page,
+        ...(query.sortBy
+          ? {
+              orderBy: {
+                [query.sortBy]: query.sort,
+              },
+            }
+          : undefined),
+        select: {
+          id: true,
+          comment: true,
+          created_at: true,
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            },
+          },
+        },
+      }),
+      this.prismaService.task_comments.count(),
+    ]);
+
+    return {
+      data: data.map((comment) => ({
+        id: comment.id,
+        comment: comment.comment,
+        created_at: comment.created_at,
+        user: {
+          id: comment.user.id,
+          name: comment.user.name,
+          email: comment.user.email,
+        },
+      })),
+      meta: {
+        page: query.page,
+        per_page: query.per_page,
+        total_page: Math.ceil(total / query.per_page),
+        total: total,
+        has_more: total > query.per_page * query.page,
+      },
+    };
   }
 
   async findAll(query: ListTaskDTO) {

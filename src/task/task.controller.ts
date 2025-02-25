@@ -7,6 +7,7 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { RequestUserInterface } from 'src/user/user.interface';
 import { ListTaskDTO } from './dto/list-task.dto';
 import { CreateTaskCommentDTO } from './dto/create-task-comment.dto';
+import { ListCommentDTO } from './dto/list-comment.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('v1/task')
@@ -29,6 +30,11 @@ export class TaskController {
     return {
       message: 'Comment created successfully',
     };
+  }
+
+  @Get(':task_id/comment')
+  comment(@Param('task_id') task_id: string, @Query() query: ListCommentDTO) {
+    return this.taskService.getComment(task_id, query);
   }
 
   @Get()
