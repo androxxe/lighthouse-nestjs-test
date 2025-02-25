@@ -6,6 +6,7 @@ import { CryptoService } from './crypto/crypto.service';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
 import { PassportModule } from '@nestjs/passport';
+import { IsUserAlreadyExistConstraint } from './is-user-exists.validator';
 
 @Module({
   imports: [
@@ -16,6 +17,6 @@ import { PassportModule } from '@nestjs/passport';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, CryptoService, JwtStrategy],
+  providers: [AuthService, CryptoService, JwtStrategy, IsUserAlreadyExistConstraint],
 })
 export class AuthModule {}

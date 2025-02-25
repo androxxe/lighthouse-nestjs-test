@@ -42,8 +42,8 @@ model tasks {
 
 model task_categories {
   id          String     @id @default(uuid())
-  taskId      String
-  task        tasks      @relation(fields: [taskId], references: [id])
+  task_id     String
+  task        tasks      @relation(fields: [task_id], references: [id])
   category_id String
   category    categories @relation(fields: [category_id], references: [id])
   created_at  DateTime   @default(now())
