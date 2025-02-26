@@ -84,7 +84,7 @@ enum Priority {
 }
 
 enum Status {
-  Pending
+  Created
   InProgress
   Completed
 }

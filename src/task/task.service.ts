@@ -26,7 +26,7 @@ export class TaskService implements TaskServiceInterface {
         due_date: data.due_date ? new Date(data.due_date) : null,
         priority: data.priority,
         project_id: data?.project_id,
-        status: Status.Pending,
+        status: Status.Created,
         task_categories: data.category_ids
           ? {
               createMany: {
@@ -224,6 +224,10 @@ export class TaskService implements TaskServiceInterface {
       }),
     };
 
+    const queryStatus: Prisma.tasksWhereInput = {
+      ...(query.status && { status: query.status }),
+    };
+
     const [data, total] = await Promise.all([
       this.prismaService.tasks.findMany({
         skip: (query.page - 1) * query.per_page,
@@ -235,7 +239,7 @@ export class TaskService implements TaskServiceInterface {
               },
             }
           : undefined),
-        where: { ...queryFilter, ...queryProject, ...queryCategory },
+        where: { ...queryFilter, ...queryProject, ...queryCategory, ...queryStatus },
         select: {
           id: true,
           name: true,
@@ -421,6 +425,7 @@ export class TaskService implements TaskServiceInterface {
               },
             }
           : undefined),
+        ...(data.status && { status: data.status }),
       },
       select: {
         id: true,

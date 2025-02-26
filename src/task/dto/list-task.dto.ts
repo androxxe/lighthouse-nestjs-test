@@ -2,6 +2,7 @@ import { IsArray, IsEnum, IsOptional, IsString } from 'class-validator';
 import { BaseDataTableDTO } from 'src/datatable/dto/base-datatable.dto';
 import { FilterEnum } from '../filter.enum';
 import { IsForeignKeyExists } from 'src/validator/is-foreign-key-exist.validator';
+import { Status } from '@prisma/client';
 
 export class ListTaskDTO extends BaseDataTableDTO {
   @IsEnum(FilterEnum)
@@ -18,4 +19,8 @@ export class ListTaskDTO extends BaseDataTableDTO {
   @IsOptional()
   @IsForeignKeyExists('categories', 'id', { each: true })
   category_ids?: string[];
+
+  @IsEnum(Status)
+  @IsOptional()
+  status: Status;
 }
