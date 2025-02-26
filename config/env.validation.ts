@@ -5,6 +5,9 @@ class EnvironmentVariables {
   @IsNumber()
   APP_PORT: number;
 
+  @IsNumber()
+  WEBSOCKET_PORT: number;
+
   @IsString()
   @IsEnum(['development', 'staging', 'production'])
   APP_ENV: string;
