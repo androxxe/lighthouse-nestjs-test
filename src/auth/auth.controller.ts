@@ -1,8 +1,9 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { RegisterDTO } from './dto/register.dto';
 import { AuthService } from './auth.service';
 import { CryptoService } from './crypto/crypto.service';
 import { LoginDTO } from './dto/login.dto';
+import { JwtAuthGuard } from './jwt-auth.guard';
 
 @Controller('v1/auth')
 export class AuthController {
@@ -27,6 +28,15 @@ export class AuthController {
     return {
       message: 'User logged in successfully',
       data,
+    };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('validate')
+  async validate() {
+    return {
+      message: 'Token valid',
+      data: null,
     };
   }
 }
