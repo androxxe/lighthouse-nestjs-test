@@ -21,7 +21,10 @@ export interface TaskServiceInterface {
     task_id: string,
     data: CreateTaskCommentDTO
   ): Promise<task_comments>;
-  getComment: (task_id: string, query: ListCommentDTO) => Promise<DatatableInterface<TaskCommentListResponseInterface>>;
+  findAllComment: (
+    task_id: string,
+    query: ListCommentDTO
+  ) => Promise<DatatableInterface<TaskCommentListResponseInterface>>;
   findAll(query: ListTaskDTO): Promise<DatatableInterface<TaskListResponseInterface>>;
   findOne(id: string): Promise<TaskDetailResponseInterface>;
   update(id: string, updateTaskDTO: UpdateTaskDTO): string;

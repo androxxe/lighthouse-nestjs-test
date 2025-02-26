@@ -34,7 +34,7 @@ export class TaskController {
 
   @Get(':task_id/comment')
   comment(@Param('task_id') task_id: string, @Query() query: ListCommentDTO) {
-    return this.taskService.getComment(task_id, query);
+    return this.taskService.findAllComment(task_id, query);
   }
 
   @Get()

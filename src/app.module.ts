@@ -7,6 +7,7 @@ import { UserModule } from './user/user.module';
 import { TaskModule } from './task/task.module';
 import { PrismaService } from './prisma/prisma.service';
 import { IsForeignKeyExistsConstraint } from './validator/is-foreign-key-exist.validator';
+import { ProjectModule } from './project/project.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { IsForeignKeyExistsConstraint } from './validator/is-foreign-key-exist.v
     AuthModule,
     UserModule,
     TaskModule,
+    ProjectModule,
   ],
   providers: [PrismaService, IsForeignKeyExistsConstraint],
 })

@@ -9,6 +9,7 @@ import { TaskServiceInterface } from './task.service.interface';
 import { ListTaskDTO } from './dto/list-task.dto';
 import { CreateTaskCommentDTO } from './dto/create-task-comment.dto';
 import { ListCommentDTO } from './dto/list-comment.dto';
+import { generateMetaDatatable } from 'src/datatable/datatable.util';
 
 @Injectable()
 export class TaskService implements TaskServiceInterface {
@@ -118,7 +119,7 @@ export class TaskService implements TaskServiceInterface {
     });
   }
 
-  async getComment(task_id: string, query: ListCommentDTO) {
+  async findAllComment(task_id: string, query: ListCommentDTO) {
     const [data, total] = await Promise.all([
       this.prismaService.task_comments.findMany({
         where: {
@@ -126,15 +127,11 @@ export class TaskService implements TaskServiceInterface {
             id: task_id,
           },
         },
+        orderBy: {
+          created_at: 'desc',
+        },
         skip: (query.page - 1) * query.per_page,
         take: query.per_page,
-        ...(query.sortBy
-          ? {
-              orderBy: {
-                [query.sortBy]: query.sort,
-              },
-            }
-          : undefined),
         select: {
           id: true,
           comment: true,
@@ -162,13 +159,11 @@ export class TaskService implements TaskServiceInterface {
           email: comment.user.email,
         },
       })),
-      meta: {
+      meta: generateMetaDatatable({
         page: query.page,
         per_page: query.per_page,
-        total_page: Math.ceil(total / query.per_page),
         total: total,
-        has_more: total > query.per_page * query.page,
-      },
+      }),
     };
   }
 
@@ -254,13 +249,11 @@ export class TaskService implements TaskServiceInterface {
         })),
         total_comment: task._count.task_comments,
       })),
-      meta: {
+      meta: generateMetaDatatable({
         page: query.page,
         per_page: query.per_page,
-        total_page: Math.ceil(total / query.per_page),
         total: total,
-        has_more: total > query.per_page * query.page,
-      },
+      }),
     };
   }
 

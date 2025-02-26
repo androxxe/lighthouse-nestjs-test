@@ -5,7 +5,7 @@ import { AuthServiceInterface, JWTPayloadInterface } from './auth.service.interf
 import { LoginDTO } from './dto/login.dto';
 import { CryptoService } from './crypto/crypto.service';
 import { JwtService } from '@nestjs/jwt';
-import { excludeKeys } from 'src/utils/exclude';
+import { excludeKeys } from 'src/utils/exclude.util';
 
 @Injectable()
 export class AuthService implements AuthServiceInterface {

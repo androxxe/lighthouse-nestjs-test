@@ -70,12 +70,11 @@ model categories {
 }
 
 model projects {
-  id          String   @id @default(uuid())
-  name        String
-  description String
-  created_at  DateTime @default(now())
-  updated_at  DateTime @updatedAt
-  tasks       tasks[]
+  id         String   @id @default(uuid())
+  name       String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  tasks      tasks[]
 }
 
 enum Priority {
