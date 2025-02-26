@@ -37,6 +37,15 @@ export class TaskController {
     return this.taskService.findAllComment(task_id, query);
   }
 
+  @Delete(':task_id/comment/:comment_id')
+  async deleteComment(@Param('task_id') task_id: string, @Param('comment_id') comment_id: string) {
+    await this.taskService.deleteComment(task_id, comment_id);
+
+    return {
+      message: 'Comment deleted successfully',
+    };
+  }
+
   @Get()
   findAll(@Query() query: ListTaskDTO) {
     return this.taskService.findAll(query);

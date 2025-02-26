@@ -167,6 +167,32 @@ export class TaskService implements TaskServiceInterface {
     };
   }
 
+  async deleteComment(task_id: string, comment_id: string) {
+    const check = await this.prismaService.task_comments.findUnique({
+      where: {
+        id: comment_id,
+        task: {
+          id: task_id,
+        },
+      },
+    });
+
+    if (!check) {
+      throw new NotFoundException('Comment not found');
+    }
+
+    const task_comments = await this.prismaService.task_comments.delete({
+      where: {
+        id: comment_id,
+        task: {
+          id: task_id,
+        },
+      },
+    });
+
+    return !!task_comments;
+  }
+
   async findAll(query: ListTaskDTO) {
     const [data, total] = await Promise.all([
       this.prismaService.tasks.findMany({
@@ -337,8 +363,22 @@ export class TaskService implements TaskServiceInterface {
     return `This action updates a #${id} task`;
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} task`;
+  async remove(id: string) {
+    const check = await this.prismaService.tasks.findFirst({
+      where: {
+        id,
+      },
+    });
+
+    if (!check) throw new NotFoundException('Task not found');
+
+    const tasks = await this.prismaService.tasks.delete({
+      where: {
+        id,
+      },
+    });
+
+    return !!tasks;
   }
 
   createCategory(data: CreateTaskCategoryDTO) {

@@ -25,9 +25,10 @@ export interface TaskServiceInterface {
     task_id: string,
     query: ListCommentDTO
   ) => Promise<DatatableInterface<TaskCommentListResponseInterface>>;
+  deleteComment(task_id: string, comment_id: string): Promise<boolean>;
   findAll(query: ListTaskDTO): Promise<DatatableInterface<TaskListResponseInterface>>;
   findOne(id: string): Promise<TaskDetailResponseInterface>;
   update(id: string, updateTaskDTO: UpdateTaskDTO): string;
-  remove(id: string): string;
+  remove(id: string): Promise<boolean>;
   createCategory(data: CreateTaskCategoryDTO): Promise<categories>;
 }
