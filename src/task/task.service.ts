@@ -50,6 +50,7 @@ export class TaskService implements TaskServiceInterface {
             id: true,
             category: {
               select: {
+                id: true,
                 name: true,
               },
             },
@@ -91,7 +92,7 @@ export class TaskService implements TaskServiceInterface {
             }
           : null,
       task_categories: task.task_categories.map((category) => ({
-        id: category.id,
+        id: category.category.id,
         name: category.category.name,
       })),
     };
@@ -196,7 +197,7 @@ export class TaskService implements TaskServiceInterface {
   }
 
   async findAll(query: ListTaskDTO) {
-    const queryFilter: Prisma.tasksScalarWhereInput = {
+    const queryFilter: Prisma.tasksWhereInput = {
       ...(query.filter && {
         due_date:
           query.filter === FilterEnum.today
@@ -204,6 +205,22 @@ export class TaskService implements TaskServiceInterface {
             : {
                 gte: dayjs().add(1, 'day').startOf('day').toDate(),
               },
+      }),
+    };
+
+    const queryProject: Prisma.tasksWhereInput = {
+      ...(query.project_id && { project_id: query.project_id }),
+    };
+
+    const queryCategory: Prisma.tasksWhereInput = {
+      ...(query.category_ids && {
+        task_categories: {
+          some: {
+            category_id: {
+              in: query.category_ids,
+            },
+          },
+        },
       }),
     };
 
@@ -218,7 +235,7 @@ export class TaskService implements TaskServiceInterface {
               },
             }
           : undefined),
-        where: queryFilter,
+        where: { ...queryFilter, ...queryProject, ...queryCategory },
         select: {
           id: true,
           name: true,
@@ -234,6 +251,7 @@ export class TaskService implements TaskServiceInterface {
               id: true,
               category: {
                 select: {
+                  id: true,
                   name: true,
                 },
               },
@@ -284,7 +302,7 @@ export class TaskService implements TaskServiceInterface {
               }
             : null,
         task_categories: task.task_categories.map((category) => ({
-          id: category.id,
+          id: category.category.id,
           name: category.category.name,
         })),
         total_comment: task._count.task_comments,
@@ -317,6 +335,7 @@ export class TaskService implements TaskServiceInterface {
             id: true,
             category: {
               select: {
+                id: true,
                 name: true,
               },
             },
@@ -366,7 +385,7 @@ export class TaskService implements TaskServiceInterface {
             }
           : null,
       task_categories: task.task_categories.map((category) => ({
-        id: category.id,
+        id: category.category.id,
         name: category.category.name,
       })),
       total_comment: task._count.task_comments,
@@ -418,6 +437,7 @@ export class TaskService implements TaskServiceInterface {
             id: true,
             category: {
               select: {
+                id: true,
                 name: true,
               },
             },
@@ -459,7 +479,7 @@ export class TaskService implements TaskServiceInterface {
             }
           : null,
       task_categories: updated_task.task_categories.map((category) => ({
-        id: category.id,
+        id: category.category.id,
         name: category.category.name,
       })),
     };
