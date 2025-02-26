@@ -359,8 +359,96 @@ export class TaskService implements TaskServiceInterface {
     };
   }
 
-  update(id: string, updateTaskDTO: UpdateTaskDTO) {
-    return `This action updates a #${id} task`;
+  async update(id: string, user: RequestUserInterface['user'], data: UpdateTaskDTO) {
+    const old_task = await this.prismaService.tasks.findFirst({
+      where: {
+        id,
+      },
+    });
+
+    if (!old_task) throw new NotFoundException('Task not found');
+
+    const updated_task = await this.prismaService.tasks.update({
+      where: {
+        id,
+      },
+      data: {
+        ...(data.name && { name: data.name }),
+        ...(data.description && { description: data.description }),
+        ...(data.due_date && { due_date: data.due_date ? new Date(data.due_date) : null }),
+        ...(data.priority && { priority: data.priority }),
+        ...(data.project_id && { project_id: data.project_id }),
+        ...(data.category_ids
+          ? {
+              task_categories: {
+                deleteMany: {},
+                createMany: {
+                  data: data.category_ids.map((id) => ({ category_id: id })),
+                },
+              },
+            }
+          : undefined),
+      },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        due_date: true,
+        priority: true,
+        status: true,
+        created_at: true,
+        updated_at: true,
+        project_id: true,
+        task_categories: {
+          select: {
+            id: true,
+            category: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+        user: {
+          select: {
+            email: true,
+            name: true,
+            id: true,
+          },
+        },
+        project: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+
+    return {
+      id: updated_task.id,
+      name: updated_task.name,
+      description: updated_task.description,
+      due_date: updated_task.due_date,
+      priority: updated_task.priority,
+      status: updated_task.status,
+      created_at: updated_task.created_at,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      },
+      project:
+        updated_task.project && updated_task.project_id
+          ? {
+              id: updated_task.project_id,
+              name: updated_task.project.name,
+            }
+          : null,
+      task_categories: updated_task.task_categories.map((category) => ({
+        id: category.id,
+        name: category.category.name,
+      })),
+    };
   }
 
   async remove(id: string) {

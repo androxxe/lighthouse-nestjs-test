@@ -8,6 +8,7 @@ import {
   TaskCreateResponseInterface,
   TaskDetailResponseInterface,
   TaskListResponseInterface,
+  TaskUpdateResponseInterface,
 } from './task.interface';
 import { ListTaskDTO } from './dto/list-task.dto';
 import { DatatableInterface } from 'src/datatable/datatable.interface';
@@ -28,7 +29,7 @@ export interface TaskServiceInterface {
   deleteComment(task_id: string, comment_id: string): Promise<boolean>;
   findAll(query: ListTaskDTO): Promise<DatatableInterface<TaskListResponseInterface>>;
   findOne(id: string): Promise<TaskDetailResponseInterface>;
-  update(id: string, updateTaskDTO: UpdateTaskDTO): string;
+  update(id: string, user: RequestUserInterface['user'], data: UpdateTaskDTO): Promise<TaskUpdateResponseInterface>;
   remove(id: string): Promise<boolean>;
   createCategory(data: CreateTaskCategoryDTO): Promise<categories>;
 }
