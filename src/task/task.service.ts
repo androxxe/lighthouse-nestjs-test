@@ -3,13 +3,15 @@ import { CreateTaskDTO } from './dto/create-task.dto';
 import { UpdateTaskDTO } from './dto/update-task.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateTaskCategoryDTO } from './dto/create-task-category.dto';
-import { Status } from '@prisma/client';
+import { Prisma, Status } from '@prisma/client';
 import { RequestUserInterface } from 'src/user/user.interface';
 import { TaskServiceInterface } from './task.service.interface';
 import { ListTaskDTO } from './dto/list-task.dto';
 import { CreateTaskCommentDTO } from './dto/create-task-comment.dto';
 import { ListCommentDTO } from './dto/list-comment.dto';
 import { generateMetaDatatable } from 'src/datatable/datatable.util';
+import { FilterEnum } from './filter.enum';
+import dayjs from 'dayjs';
 
 @Injectable()
 export class TaskService implements TaskServiceInterface {
@@ -194,6 +196,17 @@ export class TaskService implements TaskServiceInterface {
   }
 
   async findAll(query: ListTaskDTO) {
+    const queryFilter: Prisma.tasksScalarWhereInput = {
+      ...(query.filter && {
+        due_date:
+          query.filter === FilterEnum.today
+            ? { gte: dayjs().startOf('day').toDate(), lte: dayjs().endOf('day').toDate() }
+            : {
+                gte: dayjs().add(1, 'day').startOf('day').toDate(),
+              },
+      }),
+    };
+
     const [data, total] = await Promise.all([
       this.prismaService.tasks.findMany({
         skip: (query.page - 1) * query.per_page,
@@ -205,6 +218,7 @@ export class TaskService implements TaskServiceInterface {
               },
             }
           : undefined),
+        where: queryFilter,
         select: {
           id: true,
           name: true,
