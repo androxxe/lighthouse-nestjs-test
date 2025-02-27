@@ -3,20 +3,24 @@ import { TaskService } from './task.service';
 import { CreateTaskDTO } from './dto/create-task.dto';
 import { UpdateTaskDTO } from './dto/update-task.dto';
 import { CreateTaskCategoryDTO } from './dto/create-task-category.dto';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { RequestUserInterface } from 'src/user/user.interface';
 import { ListTaskDTO } from './dto/list-task.dto';
 import { CreateTaskCommentDTO } from './dto/create-task-comment.dto';
 import { ListCommentDTO } from './dto/list-comment.dto';
+import { TaskGateway } from './task.gateway';
+import { JwtAuthGuard } from 'src/auth/jwt-auth/jwt-auth.guard';
 
 @UseGuards(JwtAuthGuard)
 @Controller('v1/task')
 export class TaskController {
-  constructor(private readonly taskService: TaskService) {}
+  constructor(private readonly taskService: TaskService, private readonly taskGateway: TaskGateway) {}
 
   @Post()
-  create(@Request() req: RequestUserInterface, @Body() data: CreateTaskDTO) {
-    return this.taskService.create(req.user, data);
+  async create(@Request() req: RequestUserInterface, @Body() data: CreateTaskDTO) {
+    const task = await this.taskService.create(req.user, data);
+    this.taskGateway.broadcastTasksUpdate();
+
+    return task;
   }
 
   @Post(':task_id/comment')

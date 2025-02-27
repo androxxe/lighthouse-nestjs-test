@@ -1,24 +1,22 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { TaskController } from './task.controller';
+import { TaskGateway } from './task.gateway';
 import { TaskService } from './task.service';
 import { PrismaModule } from 'src/prisma/prisma.module';
-import { TaskGateway } from './task.gateway';
 import { JwtModule } from '@nestjs/jwt';
 
-describe('TaskController', () => {
-  let controller: TaskController;
+describe('TaskGateway', () => {
+  let gateway: TaskGateway;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [PrismaModule, JwtModule],
-      controllers: [TaskController],
-      providers: [TaskService, TaskGateway],
+      providers: [TaskGateway, TaskService],
     }).compile();
 
-    controller = module.get<TaskController>(TaskController);
+    gateway = module.get<TaskGateway>(TaskGateway);
   });
 
   it('should be defined', () => {
-    expect(controller).toBeDefined();
+    expect(gateway).toBeDefined();
   });
 });

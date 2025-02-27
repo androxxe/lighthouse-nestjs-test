@@ -3,7 +3,7 @@ import { RegisterDTO } from './dto/register.dto';
 import { AuthService } from './auth.service';
 import { CryptoService } from './crypto/crypto.service';
 import { LoginDTO } from './dto/login.dto';
-import { JwtAuthGuard } from './jwt-auth.guard';
+import { JwtAuthGuard } from './jwt-auth/jwt-auth.guard';
 
 @Controller('v1/auth')
 export class AuthController {
