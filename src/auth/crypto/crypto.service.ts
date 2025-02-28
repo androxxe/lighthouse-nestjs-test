@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { hash, compare, genSalt } from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { CryptoServiceInterface } from './crypto.service.interface';
 
 const SALT_ROUNDS = 10;
@@ -8,24 +8,21 @@ const SALT_ROUNDS = 10;
 export class CryptoService implements CryptoServiceInterface {
   async hash(password: string): Promise<string> {
     return new Promise((resolve, reject) => {
-      genSalt(SALT_ROUNDS, function (err, salt) {
+      bcrypt.genSalt(SALT_ROUNDS, async function (err, salt) {
         if (err) {
           return reject(err);
         }
 
-        hash(password, salt, (err: unknown, hash: string) => {
-          if (err) {
-            reject(err);
-          }
-          resolve(hash);
-        });
+        const result = bcrypt.hashSync(password, salt);
+
+        resolve(result);
       });
     });
   }
 
   async compare(password: string, hash: string): Promise<boolean> {
     return new Promise((resolve, reject) => {
-      compare(password, hash, (err: unknown, isMatch: boolean) => {
+      bcrypt.compare(password, hash, (err: unknown, isMatch: boolean) => {
         if (err) {
           reject(err);
         }
