@@ -2,7 +2,7 @@ name: CI Dev
 
 on:
   push:
-    branches: ["development"]
+    branches: ["dev"]
 
 jobs:
   linter-code:
