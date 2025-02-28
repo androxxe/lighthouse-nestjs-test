@@ -42,6 +42,7 @@ jobs:
       - name: Build with Docker Compose
         run: |
           touch .env
+          echo APP_NAME="${{ vars.APP_NAME }}" >> .env
           echo APP_ENV="${{ vars.APP_ENV }}" >> .env
           echo APP_PORT="${{ vars.APP_PORT }}" >> .env
           echo WEBSOCKET_PORT="${{ vars.WEBSOCKET_PORT }}" >> .env
