@@ -1,11 +1,16 @@
 {
   "name": "lighthouse-nestjs-test",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "Lighthouse NestJS Test",
+  "author": "Andrio Sirait",
   "private": true,
   "license": "UNLICENSED",
+  "engines": {
+    "node": ">=18.18.0",
+    "pnpm": ">=9.4.0"
+  },
   "scripts": {
+    "preinstall": "npx only-allow pnpm",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
