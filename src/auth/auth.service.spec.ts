@@ -39,12 +39,18 @@ describe('AuthController', () => {
 
     jest.spyOn(authService, 'register').mockResolvedValue(mockRegister);
 
-    const result = await controller.register({ name: 'John Doe', email: 'john@example.com', password: '123456' });
+    const result = await controller.register({
+      name: 'John Doe',
+      email: 'john@example.com',
+      password: 'P@ssword123',
+      password_confirmation: 'P@ssword123',
+    });
 
     expect(authService.register).toHaveBeenCalledWith({
       name: 'John Doe',
       email: 'john@example.com',
-      password: '123456',
+      password: 'P@ssword123',
+      password_confirmation: 'P@ssword123',
     });
     expect(result).toEqual({
       message: expect.any(String),
@@ -67,12 +73,12 @@ describe('AuthController', () => {
 
     const result = await controller.login({
       email: 'john@example.com',
-      password: '123456',
+      password: 'P@ssword123',
     });
 
     expect(authService.login).toHaveBeenCalledWith({
       email: 'john@example.com',
-      password: '123456',
+      password: 'P@ssword123',
     });
 
     expect(result).toEqual({
