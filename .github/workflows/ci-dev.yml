@@ -26,6 +26,7 @@ jobs:
       - name: Run linter
         run: pnpm lint
   deploy:
+    needs: linter-code
     name: Build and deploy Dev Container
     runs-on: ubuntu-latest
 
