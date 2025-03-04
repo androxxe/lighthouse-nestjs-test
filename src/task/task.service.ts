@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTaskDTO } from './dto/create-task.dto';
 import { UpdateTaskDTO } from './dto/update-task.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateTaskCategoryDTO } from './dto/create-task-category.dto';
 import { Prisma, Status } from '@prisma/client';
 import { RequestUserInterface } from 'src/user/user.interface';
 import { TaskServiceInterface } from './task.service.interface';

@@ -50,3 +50,4 @@ pnpm >= 9.4.0
 
 - E2E Test
 - Server side socket.io for each filter/query
+- Implement real pagination on socket.io
