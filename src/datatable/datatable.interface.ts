@@ -1,4 +1,4 @@
-export interface DatatableInterface<T> {
+export interface DatatableInterface<T, Q> {
   data: T[];
   meta: {
     page: number;
@@ -6,5 +6,6 @@ export interface DatatableInterface<T> {
     total_page: number;
     total: number;
     has_more: boolean;
+    query: Q;
   };
 }

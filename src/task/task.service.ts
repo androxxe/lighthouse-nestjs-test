@@ -162,10 +162,11 @@ export class TaskService implements TaskServiceInterface {
           email: comment.user.email,
         },
       })),
-      meta: generateMetaDatatable({
+      meta: generateMetaDatatable<ListCommentDTO>({
         page: query.page,
         per_page: query.per_page,
         total: total,
+        query,
       }),
     };
   }
@@ -311,10 +312,11 @@ export class TaskService implements TaskServiceInterface {
         })),
         total_comment: task._count.task_comments,
       })),
-      meta: generateMetaDatatable({
+      meta: generateMetaDatatable<ListTaskDTO>({
         page: query.page,
         per_page: query.per_page,
         total: total,
+        query,
       }),
     };
   }

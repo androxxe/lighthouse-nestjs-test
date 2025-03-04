@@ -25,9 +25,9 @@ export interface TaskServiceInterface {
   findAllComment: (
     task_id: string,
     query: ListCommentDTO
-  ) => Promise<DatatableInterface<TaskCommentListResponseInterface>>;
+  ) => Promise<DatatableInterface<TaskCommentListResponseInterface, ListCommentDTO>>;
   deleteComment(task_id: string, comment_id: string): Promise<boolean>;
-  findAll(query: ListTaskDTO): Promise<DatatableInterface<TaskListResponseInterface>>;
+  findAll(query: ListTaskDTO): Promise<DatatableInterface<TaskListResponseInterface, ListTaskDTO>>;
   findOne(id: string): Promise<TaskDetailResponseInterface>;
   update(id: string, user: RequestUserInterface['user'], data: UpdateTaskDTO): Promise<TaskUpdateResponseInterface>;
   remove(id: string): Promise<boolean>;
