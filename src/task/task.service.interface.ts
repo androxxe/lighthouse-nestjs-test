@@ -29,5 +29,5 @@ export interface TaskServiceInterface {
   findAll(query: ListTaskDTO): Promise<DatatableInterface<TaskListResponseInterface, ListTaskDTO>>;
   findOne(id: string): Promise<TaskDetailResponseInterface>;
   update(id: string, user: RequestUserInterface['user'], data: UpdateTaskDTO): Promise<TaskUpdateResponseInterface>;
-  remove(id: string): Promise<boolean>;
+  remove(id: string): Promise<{ id: string }>;
 }

@@ -17,8 +17,13 @@ import { WsException } from '@nestjs/websockets';
 import { UseFilters } from '@nestjs/common';
 import { JwtAuthWsGuard } from 'src/auth/jwt-auth-ws/jwt-auth-ws.guard';
 import { WebSocketExceptionFilter } from '../ws.exception.filter';
+import { TaskCreateResponseInterface, TaskUpdateResponseInterface } from './task.interface';
 
-const EVENT_NAME = 'task-list';
+const EVENT_NAME_INFO = 'task-info';
+const EVENT_NAME_LIST = 'task-list';
+const EVENT_NAME_CREATE = 'task-list-create';
+const EVENT_NAME_UPDATE = 'task-list-update';
+const EVENT_NAME_DELETE = 'task-list-delete';
 @WebSocketGateway(configuration().websocket.port, {
   cors: {
     origin: '*',
@@ -43,7 +48,7 @@ export class TaskGateway implements OnGatewayConnection, OnGatewayDisconnect, On
   async handleConnection(@ConnectedSocket() client: Socket) {
     Logger.debug('[Websocket] Connected', client.id);
 
-    return client.emit(EVENT_NAME, {
+    return client.emit(EVENT_NAME_INFO, {
       error: false,
       message: 'Connected',
       data: [],
@@ -52,10 +57,10 @@ export class TaskGateway implements OnGatewayConnection, OnGatewayDisconnect, On
 
   @SubscribeMessage('task')
   @UsePipes(new ValidationPipe())
-  async findAll(@MessageBody() data: ListTaskDTO) {
+  async findAll(@ConnectedSocket() client: Socket, @MessageBody() data: ListTaskDTO) {
     try {
       const tasks = await this.taskService.findAll(data);
-      this.server.emit(EVENT_NAME, {
+      client.emit(EVENT_NAME_LIST, {
         error: false,
         message: 'Success',
         data: tasks,
@@ -65,13 +70,39 @@ export class TaskGateway implements OnGatewayConnection, OnGatewayDisconnect, On
     }
   }
 
-  async broadcastTasksUpdate() {
+  async broadcastTasksList() {
     const tasks = await this.taskService.findAll({ per_page: 1000, page: 1 } as ListTaskDTO);
 
-    this.server.emit(EVENT_NAME, {
+    this.server.emit(EVENT_NAME_LIST, {
       error: false,
       message: 'Success',
       data: tasks,
+    });
+  }
+
+  async broadcastTaskCreated(task: TaskCreateResponseInterface) {
+    this.server.emit(EVENT_NAME_CREATE, {
+      error: false,
+      message: 'Success',
+      data: task,
+    });
+  }
+
+  async broadcastTaskUpdate(task: TaskUpdateResponseInterface) {
+    this.server.emit(EVENT_NAME_UPDATE, {
+      error: false,
+      message: 'Success',
+      data: task,
+    });
+  }
+
+  async broadcastTaskDelete({ id }: { id: string }) {
+    this.server.emit(EVENT_NAME_DELETE, {
+      error: false,
+      message: 'Success',
+      data: {
+        id,
+      },
     });
   }
 }

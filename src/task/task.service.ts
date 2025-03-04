@@ -506,6 +506,8 @@ export class TaskService implements TaskServiceInterface {
       },
     });
 
-    return !!tasks;
+    return {
+      id: tasks.id,
+    };
   }
 }

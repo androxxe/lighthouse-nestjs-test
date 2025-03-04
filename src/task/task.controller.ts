@@ -17,7 +17,7 @@ export class TaskController {
   @Post()
   async create(@Request() req: RequestUserInterface, @Body() data: CreateTaskDTO) {
     const task = await this.taskService.create(req.user, data);
-    this.taskGateway.broadcastTasksUpdate();
+    this.taskGateway.broadcastTaskCreated(task);
 
     return task;
   }
@@ -29,7 +29,6 @@ export class TaskController {
     @Body() data: CreateTaskCommentDTO
   ) {
     await this.taskService.createComment(req.user, task_id, data);
-    this.taskGateway.broadcastTasksUpdate();
 
     return {
       message: 'Comment created successfully',
@@ -39,7 +38,6 @@ export class TaskController {
   @Get(':task_id/comment')
   async comment(@Param('task_id') task_id: string, @Query() query: ListCommentDTO) {
     const response = await this.taskService.findAllComment(task_id, query);
-    this.taskGateway.broadcastTasksUpdate();
 
     return response;
   }
@@ -47,7 +45,6 @@ export class TaskController {
   @Delete(':task_id/comment/:comment_id')
   async deleteComment(@Param('task_id') task_id: string, @Param('comment_id') comment_id: string) {
     await this.taskService.deleteComment(task_id, comment_id);
-    this.taskGateway.broadcastTasksUpdate();
 
     return {
       message: 'Comment deleted successfully',
@@ -67,14 +64,17 @@ export class TaskController {
   @Patch(':task_id')
   async update(@Param('task_id') task_id: string, @Body() data: UpdateTaskDTO, @Request() req: RequestUserInterface) {
     const response = await this.taskService.update(task_id, req.user, data);
-    this.taskGateway.broadcastTasksUpdate();
+    this.taskGateway.broadcastTaskUpdate(response);
     return response;
   }
 
   @Delete(':task_id')
   async remove(@Param('task_id') task_id: string) {
     const response = await this.taskService.remove(task_id);
-    this.taskGateway.broadcastTasksUpdate();
-    return response;
+    this.taskGateway.broadcastTaskDelete({ id: response.id });
+    return {
+      message: 'Task deleted successfully',
+      data: response,
+    };
   }
 }
