@@ -2,7 +2,6 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, 
 import { TaskService } from './task.service';
 import { CreateTaskDTO } from './dto/create-task.dto';
 import { UpdateTaskDTO } from './dto/update-task.dto';
-import { CreateTaskCategoryDTO } from './dto/create-task-category.dto';
 import { RequestUserInterface } from 'src/user/user.interface';
 import { ListTaskDTO } from './dto/list-task.dto';
 import { CreateTaskCommentDTO } from './dto/create-task-comment.dto';
@@ -30,6 +29,7 @@ export class TaskController {
     @Body() data: CreateTaskCommentDTO
   ) {
     await this.taskService.createComment(req.user, task_id, data);
+    this.taskGateway.broadcastTasksUpdate();
 
     return {
       message: 'Comment created successfully',
@@ -37,13 +37,17 @@ export class TaskController {
   }
 
   @Get(':task_id/comment')
-  comment(@Param('task_id') task_id: string, @Query() query: ListCommentDTO) {
-    return this.taskService.findAllComment(task_id, query);
+  async comment(@Param('task_id') task_id: string, @Query() query: ListCommentDTO) {
+    const response = await this.taskService.findAllComment(task_id, query);
+    this.taskGateway.broadcastTasksUpdate();
+
+    return response;
   }
 
   @Delete(':task_id/comment/:comment_id')
   async deleteComment(@Param('task_id') task_id: string, @Param('comment_id') comment_id: string) {
     await this.taskService.deleteComment(task_id, comment_id);
+    this.taskGateway.broadcastTasksUpdate();
 
     return {
       message: 'Comment deleted successfully',
@@ -61,17 +65,16 @@ export class TaskController {
   }
 
   @Patch(':task_id')
-  update(@Param('task_id') task_id: string, @Body() data: UpdateTaskDTO, @Request() req: RequestUserInterface) {
-    return this.taskService.update(task_id, req.user, data);
+  async update(@Param('task_id') task_id: string, @Body() data: UpdateTaskDTO, @Request() req: RequestUserInterface) {
+    const response = await this.taskService.update(task_id, req.user, data);
+    this.taskGateway.broadcastTasksUpdate();
+    return response;
   }
 
   @Delete(':task_id')
-  remove(@Param('task_id') task_id: string) {
-    return this.taskService.remove(task_id);
-  }
-
-  @Post('category')
-  createCategory(@Body() createTaskCategoryDTO: CreateTaskCategoryDTO) {
-    return this.taskService.createCategory(createTaskCategoryDTO);
+  async remove(@Param('task_id') task_id: string) {
+    const response = await this.taskService.remove(task_id);
+    this.taskGateway.broadcastTasksUpdate();
+    return response;
   }
 }

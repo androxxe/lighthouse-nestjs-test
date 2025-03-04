@@ -509,10 +509,4 @@ export class TaskService implements TaskServiceInterface {
 
     return !!tasks;
   }
-
-  createCategory(data: CreateTaskCategoryDTO) {
-    return this.prismaService.categories.create({
-      data,
-    });
-  }
 }

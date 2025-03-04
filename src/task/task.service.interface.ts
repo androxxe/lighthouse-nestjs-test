@@ -1,8 +1,7 @@
 import { RequestUserInterface } from 'src/user/user.interface';
-import { CreateTaskCategoryDTO } from './dto/create-task-category.dto';
 import { CreateTaskDTO } from './dto/create-task.dto';
 import { UpdateTaskDTO } from './dto/update-task.dto';
-import { categories, task_comments } from '@prisma/client';
+import { task_comments } from '@prisma/client';
 import {
   TaskCommentListResponseInterface,
   TaskCreateResponseInterface,
@@ -31,5 +30,4 @@ export interface TaskServiceInterface {
   findOne(id: string): Promise<TaskDetailResponseInterface>;
   update(id: string, user: RequestUserInterface['user'], data: UpdateTaskDTO): Promise<TaskUpdateResponseInterface>;
   remove(id: string): Promise<boolean>;
-  createCategory(data: CreateTaskCategoryDTO): Promise<categories>;
 }

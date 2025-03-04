@@ -27,6 +27,8 @@ const EVENT_NAME = 'task-list';
 @UseGuards(JwtAuthWsGuard)
 @UseFilters(new WebSocketExceptionFilter())
 export class TaskGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
+  // TODO: Improve: also save each user query, so can broadcast specific user query
+
   constructor(private readonly taskService: TaskService) {}
   @WebSocketServer() server: Server;
 
