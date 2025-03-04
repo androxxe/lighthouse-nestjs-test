@@ -11,8 +11,8 @@ export class CategoryService implements CategoryServiceInterface {
   async create(data: CreateCategoryDTO) {
     const count = await this.prismaService.categories.count();
 
-    if (count >= 10) {
-      throw new ForbiddenException('You can only create 20 categories');
+    if (count >= 5) {
+      throw new ForbiddenException('You can only create 5 categories');
     }
 
     return this.prismaService.categories.create({
@@ -29,6 +29,9 @@ export class CategoryService implements CategoryServiceInterface {
       select: {
         id: true,
         name: true,
+      },
+      orderBy: {
+        created_at: 'asc',
       },
     });
   }

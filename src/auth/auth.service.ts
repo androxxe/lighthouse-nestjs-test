@@ -60,7 +60,7 @@ export class AuthService implements AuthServiceInterface {
     };
 
     const access_token = this.jwtService.sign(payload, {
-      expiresIn: '2h',
+      expiresIn: '4h',
     });
 
     const refresh_token = this.jwtService.sign(payload, {

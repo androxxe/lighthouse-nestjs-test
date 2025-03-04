@@ -11,8 +11,8 @@ export class ProjectService implements ProjectServiceInterface {
   async create(data: CreateProjectDTO) {
     const count = await this.prismaService.projects.count();
 
-    if (count >= 10) {
-      throw new ForbiddenException('You can only create 10 projects');
+    if (count >= 5) {
+      throw new ForbiddenException('You can only create 5 projects');
     }
 
     return this.prismaService.projects.create({
@@ -29,6 +29,9 @@ export class ProjectService implements ProjectServiceInterface {
       select: {
         id: true,
         name: true,
+      },
+      orderBy: {
+        created_at: 'asc',
       },
     });
   }
