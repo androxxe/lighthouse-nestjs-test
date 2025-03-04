@@ -64,7 +64,7 @@ export class TaskGateway implements OnGatewayConnection, OnGatewayDisconnect, On
   }
 
   async broadcastTasksUpdate() {
-    const tasks = await this.taskService.findAll({ per_page: 10, page: 1 } as ListTaskDTO);
+    const tasks = await this.taskService.findAll({ per_page: 1000, page: 1 } as ListTaskDTO);
 
     this.server.emit(EVENT_NAME, {
       error: false,
