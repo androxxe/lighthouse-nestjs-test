@@ -12,7 +12,7 @@ import { TaskService } from './task.service';
 import { ListTaskDTO } from './dto/list-task.dto';
 import configuration from '../../config/configuration';
 import { Socket, Server } from 'socket.io';
-import { UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Logger, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
 import { UseFilters } from '@nestjs/common';
 import { JwtAuthWsGuard } from 'src/auth/jwt-auth-ws/jwt-auth-ws.guard';
@@ -31,14 +31,16 @@ export class TaskGateway implements OnGatewayConnection, OnGatewayDisconnect, On
   @WebSocketServer() server: Server;
 
   afterInit() {
-    console.log('Init');
+    Logger.debug('[Websocket] Init');
   }
 
   handleDisconnect(client: Socket) {
-    console.log('User disconnected', client.id);
+    Logger.debug('[Websocket] User disconnected', client.id);
   }
 
   async handleConnection(@ConnectedSocket() client: Socket) {
+    Logger.debug('[Websocket] Connected', client.id);
+
     return client.emit(EVENT_NAME, {
       error: false,
       message: 'Connected',
