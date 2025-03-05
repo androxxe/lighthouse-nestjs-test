@@ -27,9 +27,9 @@ model user {
 model tasks {
   id              String            @id @default(uuid())
   user_id         String
-  user            user              @relation(fields: [user_id], references: [id])
+  user            user              @relation(fields: [user_id], references: [id], onDelete: Cascade)
   project_id      String?
-  project         projects?         @relation(fields: [project_id], references: [id])
+  project         projects?         @relation(fields: [project_id], references: [id], onDelete: Cascade)
   name            String
   description     String?
   due_date        DateTime?
@@ -44,9 +44,9 @@ model tasks {
 model task_categories {
   id          String     @id @default(uuid())
   task_id     String
-  task        tasks      @relation(fields: [task_id], references: [id])
+  task        tasks      @relation(fields: [task_id], references: [id], onDelete: Cascade)
   category_id String
-  category    categories @relation(fields: [category_id], references: [id])
+  category    categories @relation(fields: [category_id], references: [id], onDelete: Cascade)
   created_at  DateTime   @default(now())
   updated_at  DateTime   @updatedAt
 }
@@ -54,9 +54,9 @@ model task_categories {
 model task_comments {
   id         String   @id @default(uuid())
   task_id    String
-  task       tasks    @relation(fields: [task_id], references: [id])
+  task       tasks    @relation(fields: [task_id], references: [id], onDelete: Cascade)
   user_id    String
-  user       user     @relation(fields: [user_id], references: [id])
+  user       user     @relation(fields: [user_id], references: [id], onDelete: Cascade)
   comment    String
   created_at DateTime @default(now())
 }
