@@ -1,10 +1,11 @@
 ## Build with Nestjs
 
-Andrio Sirait - Shape Up Indonesia Test for Sr. Software Engineer
+Andrio Sirait - Test for Sr. Software Engineer
 
 # Live Demo
 
-https://api-lighthouse.andriosirait.com
+- REST API: https://api-lighthouse.andriosirait.com
+- socket.io https://socket-lighthouse.andriosirait.com
 
 # Repository
 
@@ -15,6 +16,10 @@ https://api-lighthouse.andriosirait.com
 
 ```bash
 $ pnpm install
+
+or
+
+$ docker compose up --build
 ```
 
 ## Running the app
@@ -46,8 +51,13 @@ $ pnpm run format
 Node.js >= 18.18.0
 pnpm >= 9.4.0
 
+or
+
+docker compose
+
 ## TODO for Improvement
 
 - E2E Test
 - Server side socket.io for each filter/query
 - Implement real pagination on socket.io
+- Swagger https://api-lighthouse.andriosirait.com/docs
