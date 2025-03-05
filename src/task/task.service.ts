@@ -67,6 +67,11 @@ export class TaskService implements TaskServiceInterface {
             name: true,
           },
         },
+        _count: {
+          select: {
+            task_comments: true,
+          },
+        },
       },
     });
 
@@ -94,6 +99,7 @@ export class TaskService implements TaskServiceInterface {
         id: category.category.id,
         name: category.category.name,
       })),
+      total_comment: task._count.task_comments,
     };
   }
 
@@ -170,7 +176,7 @@ export class TaskService implements TaskServiceInterface {
     };
   }
 
-  async deleteComment(task_id: string, comment_id: string) {
+  async removeComment(task_id: string, comment_id: string) {
     const check = await this.prismaService.task_comments.findUnique({
       where: {
         id: comment_id,
@@ -461,6 +467,11 @@ export class TaskService implements TaskServiceInterface {
             name: true,
           },
         },
+        _count: {
+          select: {
+            task_comments: true,
+          },
+        },
       },
     });
 
@@ -488,6 +499,7 @@ export class TaskService implements TaskServiceInterface {
         id: category.category.id,
         name: category.category.name,
       })),
+      total_comment: updated_task._count.task_comments,
     };
   }
 

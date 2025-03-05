@@ -17,7 +17,11 @@ import { WsException } from '@nestjs/websockets';
 import { UseFilters } from '@nestjs/common';
 import { JwtAuthWsGuard } from 'src/auth/jwt-auth-ws/jwt-auth-ws.guard';
 import { WebSocketExceptionFilter } from '../ws.exception.filter';
-import { TaskCreateResponseInterface, TaskUpdateResponseInterface } from './task.interface';
+import {
+  TaskCreateResponseInterface,
+  TaskDeleteResponseInterface,
+  TaskUpdateResponseInterface,
+} from './task.interface';
 
 const EVENT_NAME_INFO = 'task-info';
 const EVENT_NAME_LIST = 'task-list';
@@ -50,8 +54,9 @@ export class TaskGateway implements OnGatewayConnection, OnGatewayDisconnect, On
 
     return client.emit(EVENT_NAME_INFO, {
       error: false,
+      code: 200,
       message: 'Connected',
-      data: [],
+      data: null,
     });
   }
 
@@ -62,6 +67,7 @@ export class TaskGateway implements OnGatewayConnection, OnGatewayDisconnect, On
       const tasks = await this.taskService.findAll(data);
       client.emit(EVENT_NAME_LIST, {
         error: false,
+        code: 200,
         message: 'Success',
         data: tasks,
       });
@@ -75,6 +81,7 @@ export class TaskGateway implements OnGatewayConnection, OnGatewayDisconnect, On
 
     this.server.emit(EVENT_NAME_LIST, {
       error: false,
+      code: 200,
       message: 'Success',
       data: tasks,
     });
@@ -83,6 +90,7 @@ export class TaskGateway implements OnGatewayConnection, OnGatewayDisconnect, On
   async broadcastTaskCreated(task: TaskCreateResponseInterface) {
     this.server.emit(EVENT_NAME_CREATE, {
       error: false,
+      code: 201,
       message: 'Success',
       data: task,
     });
@@ -91,18 +99,18 @@ export class TaskGateway implements OnGatewayConnection, OnGatewayDisconnect, On
   async broadcastTaskUpdate(task: TaskUpdateResponseInterface) {
     this.server.emit(EVENT_NAME_UPDATE, {
       error: false,
+      code: 200,
       message: 'Success',
       data: task,
     });
   }
 
-  async broadcastTaskDelete({ id }: { id: string }) {
+  async broadcastTaskDelete(task: TaskDeleteResponseInterface) {
     this.server.emit(EVENT_NAME_DELETE, {
       error: false,
+      code: 200,
       message: 'Success',
-      data: {
-        id,
-      },
+      data: task,
     });
   }
 }

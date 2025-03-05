@@ -18,12 +18,14 @@ export class WebSocketExceptionFilter implements ExceptionFilter {
         error: true,
         code: 500,
         message: exception.message,
+        data: null,
       });
     } else if (exception instanceof BadRequestException) {
       client.emit('exception', {
         error: true,
         code: 400,
         message: (exception.getResponse() as { message: string[] }).message,
+        data: null,
       });
     }
   }

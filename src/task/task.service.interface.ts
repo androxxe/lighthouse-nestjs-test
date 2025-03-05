@@ -5,6 +5,7 @@ import { task_comments } from '@prisma/client';
 import {
   TaskCommentListResponseInterface,
   TaskCreateResponseInterface,
+  TaskDeleteResponseInterface,
   TaskDetailResponseInterface,
   TaskListResponseInterface,
   TaskUpdateResponseInterface,
@@ -25,9 +26,9 @@ export interface TaskServiceInterface {
     task_id: string,
     query: ListCommentDTO
   ) => Promise<DatatableInterface<TaskCommentListResponseInterface, ListCommentDTO>>;
-  deleteComment(task_id: string, comment_id: string): Promise<boolean>;
+  removeComment(task_id: string, comment_id: string): Promise<boolean>;
   findAll(query: ListTaskDTO): Promise<DatatableInterface<TaskListResponseInterface, ListTaskDTO>>;
   findOne(id: string): Promise<TaskDetailResponseInterface>;
   update(id: string, user: RequestUserInterface['user'], data: UpdateTaskDTO): Promise<TaskUpdateResponseInterface>;
-  remove(id: string): Promise<{ id: string }>;
+  remove(id: string): Promise<TaskDeleteResponseInterface>;
 }

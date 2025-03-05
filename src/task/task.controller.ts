@@ -19,7 +19,10 @@ export class TaskController {
     const task = await this.taskService.create(req.user, data);
     this.taskGateway.broadcastTaskCreated(task);
 
-    return task;
+    return {
+      message: 'Task created successfully',
+      data: task,
+    };
   }
 
   @Post(':task_id/comment')
@@ -36,15 +39,13 @@ export class TaskController {
   }
 
   @Get(':task_id/comment')
-  async comment(@Param('task_id') task_id: string, @Query() query: ListCommentDTO) {
-    const response = await this.taskService.findAllComment(task_id, query);
-
-    return response;
+  comment(@Param('task_id') task_id: string, @Query() query: ListCommentDTO) {
+    return this.taskService.findAllComment(task_id, query);
   }
 
   @Delete(':task_id/comment/:comment_id')
-  async deleteComment(@Param('task_id') task_id: string, @Param('comment_id') comment_id: string) {
-    await this.taskService.deleteComment(task_id, comment_id);
+  async removeComment(@Param('task_id') task_id: string, @Param('comment_id') comment_id: string) {
+    await this.taskService.removeComment(task_id, comment_id);
 
     return {
       message: 'Comment deleted successfully',
@@ -65,7 +66,11 @@ export class TaskController {
   async update(@Param('task_id') task_id: string, @Body() data: UpdateTaskDTO, @Request() req: RequestUserInterface) {
     const response = await this.taskService.update(task_id, req.user, data);
     this.taskGateway.broadcastTaskUpdate(response);
-    return response;
+
+    return {
+      message: 'Task updated successfully',
+      data: response,
+    };
   }
 
   @Delete(':task_id')
